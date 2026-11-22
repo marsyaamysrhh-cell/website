@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marsya Maisarah</title>
+  <link rel= "icon" href= "swan.png" type= "image/png">
+
+  <style>
+    /* =====================================================
+       COLOURS - change these lines to restyle everything
+       ===================================================== */
+    :root {
+      --beige: #f1ebe6;
+      --beige-light: #f8f4f0;
+      --beige-dark: #d9cdc4;
+      --pink: #e3d6cd;
+      --pink-deep: #8b6b58;
+      --text: #4a3228;
+      --text-soft: #7a665a;
+      --sidebar-width: 270px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background-color: var(--beige);
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    /* =====================================================
+       SIDEBAR
+       ===================================================== */
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background-color: var(--beige-light);
+      border-right: 1px solid var(--beige-dark);
+      padding: 36px 24px;
+      overflow-y: auto;
+      text-align: center;
+      z-index: 50;
+      transition: transform 0.35s ease;
+    }
+
+    /* Profile photo: 400 x 400 px recommended, shown as a 110px circle */
+    .profile-photo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background-color: var(--pink);
+      border: 3px solid var(--beige-dark);
+      margin: 0 auto 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .profile-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+    .side-name {
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+
+    .side-tag {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin-bottom: 24px;
+    }
+
+    .side-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--pink-deep);
+      margin: 26px 0 8px;
+      padding-top: 18px;
+      border-top: 1px solid var(--beige-dark);
+    }
+
+    #sidebar ul { list-style: none; }
+
+    #sidebar ul a {
+      display: block;
+      padding: 6px 12px;
+      margin: 2px 0;
+      text-decoration: none;
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      border-radius: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #sidebar ul a:hover,
+    #sidebar ul a.active {
+      background-color: var(--pink);
+      color: var(--text);
+    }
+
+    /* social media buttons in the sidebar */
+    .social-links a {
+      display: block;
+      padding: 8px 12px;
+      margin: 8px 0;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      border: 1px solid var(--pink-deep);
+      border-radius: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .social-links a:hover {
+      background-color: var(--pink-deep);
+      color: #fff;
+    }
+
+    /* ---------- VIDEO IN THE SIDEBAR ---------- */
+    .video-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-color: var(--pink);
+      border: 1px solid var(--beige-dark);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .video-box video,
+    .video-box iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      object-fit: cover;
+      background-color: #000;
+    }
+
+    /* text shown until a real video is added */
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .video-box video { display: none; }
+    .video-box video.ready { display: block; }
+    .video-box video.ready + .video-placeholder { display: none; }
+
+    .video-caption {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+
+    /* big video under the social media cards */
+    .video-wide {
+      max-width: 860px;
+      margin: 50px auto 0;
+      text-align: center;
+    }
+
+    .video-wide .video-box video { object-fit: contain; }
+
+    .video-wide .video-caption { font-size: 0.95rem; margin-top: 12px; }
+
+    /* menu button (only visible on phones) */
+    #menu-btn {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 60;
+      padding: 8px 16px;
+      background-color: var(--beige-light);
+      color: var(--text);
+      border: 1px solid var(--pink-deep);
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    /* =====================================================
+       MAIN CONTENT
+       ===================================================== */
+    main { margin-left: var(--sidebar-width); }
+
+    section, header { scroll-margin-top: 20px; }
+
+    section { padding: 90px 8%; }
+
+    section h2 {
+      font-size: 1.8rem;
+      font-weight: normal;
+      text-align: center;
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+    }
+
+    /* ---------- HOME ---------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      background-color: var(--beige-light);
+    }
+
+    /* Left half: big photo. Recommended: 1000 x 1400 px (portrait) */
+    .hero-photo {
+      width: 50%;
+      background-color: var(--pink);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+    }
+
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    /* Right half: name, short line and button */
+    .hero-text {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 6%;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: normal;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--text-soft);
+      max-width: 480px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background-color: var(--beige);
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--pink-deep);
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: var(--pink-deep);
+      color: #fff;
+    }
+
+    /* ---------- ABOUT ---------- */
+    .about { max-width: 700px; margin: 0 auto; text-align: center; }
+
+    /* ---------- INTERESTS ---------- */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: var(--beige-light);
+      border: 1px solid var(--beige-dark);
+      border-radius: 14px;
+      padding: 30px 24px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .card:hover { transform: translateY(-5px); }
+
+    .card h3 {
+      font-weight: normal;
+      margin-bottom: 8px;
+      color: var(--pink-deep);
+    }
+
+    .card p { font-size: 0.95rem; color: var(--text-soft); }
+
+    /* ---------- GALLERY ---------- */
+    .gallery-bg { background-color: var(--pink); }
+
+    .gallery-group {
+      max-width: 900px;
+      margin: 0 auto 70px;
+      scroll-margin-top: 20px;
+    }
+
+    .gallery-group:last-child { margin-bottom: 0; }
+
+    .gallery-group h3 {
+      font-weight: normal;
+      font-size: 1.3rem;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .group-desc {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-bottom: 24px;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* each photo sits inside a card (card width = 260px) */
+    .gallery-card {
+      width: 260px;
+      background-color: var(--beige-light);
+      border: 1px solid var(--beige-dark);
+      border-radius: 14px;
+      padding: 12px 12px 18px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .gallery-card:hover { transform: translateY(-5px); }
+
+    /* square photo box. Recommended photo: 800 x 800 px */
+    .photo {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-color: var(--beige);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+      font-size: 0.85rem;
+      overflow: hidden;
+      margin-bottom: 12px;
+      cursor: zoom-in;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;   /* keeps faces visible */
+      display: block;
+    }
+
+    .gallery-card h4 {
+      font-weight: normal;
+      color: var(--pink-deep);
+      font-size: 1rem;
+    }
+
+    .gallery-card p {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+    }
+
+    .gallery-card a {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--pink-deep);
+    }
+
+    .gallery-card a:hover { color: var(--pink-deep); }
+
+    /* ---------- LIGHTBOX (click a photo to enlarge) ---------- */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(74, 50, 40, 0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    #lightbox.show { display: flex; }
+
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      border: 6px solid var(--beige-light);
+    }
+
+    /* ---------- CONTACT ---------- */
+    form {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    input, textarea {
+      padding: 14px 18px;
+      border: 1px solid var(--beige-dark);
+      border-radius: 12px;
+      background-color: var(--beige-light);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--pink-deep);
+    }
+
+    textarea { min-height: 120px; resize: vertical; }
+
+    #message-status {
+      text-align: center;
+      color: var(--pink-deep);
+      margin-top: 14px;
+      min-height: 1.5em;
+    }
+
+    /* ---------- CONTACT INFO (under the form) ---------- */
+    .contact-info {
+      max-width: 480px;
+      margin: 40px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--beige-dark);
+      text-align: center;
+    }
+
+    .contact-info .contact-title {
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .contact-info p {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+    }
+
+    .contact-info a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--pink-deep);
+    }
+
+    .contact-info a:hover { color: var(--pink-deep); }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      border-top: 1px solid var(--beige-dark);
+    }
+
+    /* =====================================================
+       NEW: BIODATA TABLE, EDUCATION, EXPERIENCE
+       ===================================================== */
+    .alt-bg { background-color: var(--beige-light); }
+
+    .table-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      border: 1px solid var(--beige-dark);
+      border-radius: 14px;
+      overflow: hidden;
+      background-color: var(--beige-light);
+    }
+
+    .biodata { width: 100%; border-collapse: collapse; }
+
+    .biodata th,
+    .biodata td {
+      padding: 14px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--beige-dark);
+      font-size: 0.95rem;
+      vertical-align: top;
+    }
+
+    .biodata th {
+      width: 35%;
+      font-weight: normal;
+      letter-spacing: 1px;
+      color: var(--pink-deep);
+      background-color: var(--pink);
+    }
+
+    .biodata td { color: var(--text-soft); transition: background-color 0.3s; }
+    .biodata tr:last-child th,
+    .biodata tr:last-child td { border-bottom: none; }
+    .biodata tr:hover td { background-color: var(--beige); }
+
+    /* ---- NUMBERING (left side) + BULLETS (inside the box) ---- */
+    .biodata { counter-reset: row; }          /* start counting at 0 */
+    .biodata tr { counter-increment: row; }   /* +1 for every row */
+
+    .biodata th,
+    .biodata td { position: relative; }
+
+    .biodata th { padding-left: 52px; }       /* space for the number */
+    .biodata td { padding-left: 42px; }       /* space for the bullet */
+
+    /* number: 1. 2. 3. ... in front of Full Name until Motto */
+    .biodata th::before {
+      content: counter(row) ".";
+      position: absolute;
+      left: 20px;
+    }
+
+    /* bullet in front of Marsya Maisarah until the motto */
+    .biodata td::before {
+      content: "\2022";
+      position: absolute;
+      left: 20px;
+      color: var(--pink-deep);
+    }
+
+    /* Education + Experience use the same cards as the gallery */
+    .section-gallery { max-width: 900px; margin: 0 auto; }
+
+    /* =====================================================
+       NEW: ANIMATIONS
+       ===================================================== */
+    @keyframes fadeUp {
+      from { opacity: 0; translate: 0 30px; }
+      to   { opacity: 1; translate: 0 0; }
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    @keyframes petalFall {
+      0%   { transform: translateY(-30px) translateX(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(105vh) translateX(70px) rotate(360deg); opacity: 0; }
+    }
+
+    /* things that fade up when you scroll to them (class added by JavaScript) */
+    .reveal { opacity: 0; }
+    .reveal.visible { animation: fadeUp 0.9s ease forwards; }
+
+    .hero-text { animation: fadeUp 1.2s ease both; }
+    .profile-photo { animation: floaty 5s ease-in-out infinite; }
+
+    /* soft falling petals in the background */
+    #petals {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .petal {
+      position: absolute;
+      top: 0;
+      background-color: rgba(139, 107, 88, 0.16);
+      border-radius: 60% 40% 60% 40%;
+      animation: petalFall linear infinite;
+    }
+
+    /* thin scroll progress line at the very top */
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0;
+      background-color: var(--pink-deep);
+      z-index: 80;
+    }
+
+    /* music button */
+    #music-btn {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 70;
+      padding: 8px 16px;
+      background-color: var(--beige-light);
+      color: var(--text);
+      border: 1px solid var(--pink-deep);
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #music-btn:hover { background-color: var(--pink-deep); color: #fff; }
+
+    /* local time in the footer */
+    footer .local-time { margin-top: 6px; }
+    footer .local-time span { color: var(--text); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; }
+      .reveal.visible, .hero-text, .profile-photo { animation: none; }
+      #petals { display: none; }
+    }
+
+    /* =====================================================
+       PHONE / SMALL SCREEN
+       ===================================================== */
+    @media (max-width: 800px) {
+      #menu-btn { display: block; }
+
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+
+      main { margin-left: 0; }
+
+      .hero { flex-direction: column; }
+      .hero-photo { width: 100%; height: 65vh; }
+      .hero-text { width: 100%; padding: 50px 6%; }
+      .hero h1 { font-size: 2.2rem; }
+      section { padding: 70px 6%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENU BUTTON (phones only) -->
+  <button id="menu-btn">Menu</button>
+
+  <!-- scroll progress line, falling petals and music button -->
+  <div id="progress"></div>
+  <div id="petals"></div>
+  <button id="music-btn">&#9834; Music: on</button>
+
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
+  <aside id="sidebar">
+
+    <!-- Profile photo: save as profile.jpg (400 x 400 px) -->
+    <div class="profile-photo">
+      <img src="profile.jpg" alt="Marsya">
+    </div>
+    <h3 class="side-name">Marsya Maisarah</h3>
+    <p class="side-tag">Digital Portfolio</p>
+
+    <p class="side-title">Menu</p>
+    <ul id="main-nav">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">Biodata</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#interests">Interests</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <p class="side-title">Gallery</p>
+    <ul>
+      <li><a href="#family">Family</a></li>
+      <li><a href="#marsya">Marsya</a></li>
+      <li><a href="#social">Social Media</a></li>
+    </ul>
+
+    <p class="side-title">Social Media</p>
+    <div class="social-links">
+      
+      <a href="https://www.instagram.com/mrsysrhh/" target="_blank">Instagram</a>
+      <a href="https://www.tiktok.com/@mrsysrhh?_r=1&_t=ZS-9BHuz3tNXC2" target="_blank">TikTok</a>
+      <a href="https://www.threads.com/@mrsysrhh" target="_blank">Threads</a>
+    </div>
+
+  </aside>
+
+  <!-- =====================================================
+       MAIN CONTENT
+       ===================================================== -->
+  <main>
+
+    <!-- HOME -->
+    <header class="hero" id="home">
+
+      <!-- Save your photo as MarsyaPhoto.jpg (1000 x 1400 px) -->
+      <div class="hero-photo">
+        <img src="MarsyaPhoto.jpg" alt="Photo of Marsya">
+      </div>
+
+      <div class="hero-text">
+        <h1>Marsya Maisarah</h1>
+        <p id="greeting">Welcome to my little corner of the internet.</p>
+        <a href="#about" class="btn">Get to know me</a>
+      </div>
+
+    </header>
+
+    <!-- BIODATA (was About) -->
+    <section id="about">
+      <h2>Biodata</h2>
+      <div class="table-wrap">
+        <table class="biodata">
+          <tr><th>Full Name</th><td>Marsya Maisarah Bt Ali Tamrein</td></tr>
+          <tr><th>From</th><td>Kuching Sarawak, Malaysia</td></tr>
+          <tr><th>Studying</th><td>Information Science, UiTM</td></tr>
+          <tr><th>Family</th><td>Second of four siblings</td></tr>
+          <tr><th>Personality</th><td>Loud, talkative, a little stubborn and a perfectionist</td></tr>
+          <tr><th>Strengths</th><td>Creative, ambitious, curious and a natural leader</td></tr>
+          <tr><th>Hobbies</th><td>Yoga, Pilates, chic OOTD and pickleball</td></tr>
+          <tr><th>Motto</th><td>"You either win or learn, but you never truly lose."</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- EDUCATION (photos: 800 x 800 px each: edu1.jpg, edu2.jpg, edu3.jpg) -->
+    <section id="education" class="alt-bg">
+      <h2>Education</h2>
+      <div class="gallery section-gallery">
+        <div class="gallery-card">
+          <div class="photo"><img src="edu1.jpg" alt="Education Photo 1"></div>
+          <h4>Student Representative Council (JPP) Election</h4>
+          <p>Learning to lead, make decisions and take responsibility while working with different people.</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="photo"><img src="edu2.jpg" alt="Education Photo 2"></div>
+          <h4>Magazine Presentation</h4>
+          <p>From assignments to presentation, every experience shaped her knowledge and confidence.</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="photo"><img src="edu3.jpg" alt="Education Photo 3"></div>
+          <h4>Personal Growth</h4>
+          <p>Where the confident, talkative Marsya really started to shine.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCES (photos: 800 x 800 px each: exp1.jpg, exp2.jpg, exp3.jpg) -->
+    <section id="experience">
+      <h2>Experiences</h2>
+      <div class="gallery section-gallery">
+        <div class="gallery-card">
+          <div class="photo"><img src="exp1.jpg" alt="Experience Photo 1"></div>
+          <h4>Event Management</h4>
+          <p>first experience managing an event for her family business, learning coordination, teamwork and leadership.</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="photo"><img src="exp2.jpg" alt="Experience Photo 2"></div>
+          <h4>Kayaking & Adventure</h4>
+          <p>Stepping out of her comfort zone, embracing new experiences and enjoying the adventure.</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="photo"><img src="exp3.jpg" alt="Experience Photo 3"></div>
+          <h4>Internship</h4>
+          <p>Gaining real-world working experience, applying her knowledge and developing professional skills.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERESTS -->
+    <section id="interests">
+      <h2>Interests</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Pilates</h3>
+          <p>Slow burn, big results. Shaky legs but make it aesthetic.</p>
+        </div>
+        <div class="card">
+          <h3>Chic OOTD</h3>
+          <p>Thrifted, layered, never boring. Every fit tells a story.</p>
+        </div>
+        <div class="card">
+          <h3>Pickleball</h3>
+          <p>Low-key sporty, high-key competitive. The paddle never lies.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="gallery-bg">
+      <h2>Gallery</h2>
+
+      <!-- 1. FAMILY (photos: 800 x 800 px each) -->
+      <div class="gallery-group" id="family">
+        <h3>Family</h3>
+        <p class="group-desc">The people closest to Marsya.</p>
+
+        <div class="gallery">
+          <div class="gallery-card">
+            <div class="photo"><img src="family1.jpg" alt="Family Photo 1"></div>
+            <h4>Family Photo 1</h4>
+            <p>her people and safe place.</p>
+          </div>
+
+          <div class="gallery-card">
+            <div class="photo"><img src="family2.jpg" alt="Family Photo 2"></div>
+            <h4>Family Photo 2</h4>
+            <p>Second of four. Main character energy, middle child edition.</p>
+          </div>
+
+          <div class="gallery-card">
+            <div class="photo"><img src="family3.jpg" alt="Family Photo 3"></div>
+            <h4>Family Photo 3</h4>
+            <p>Unlocked and saved forever.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. MARSYA (photos: 800 x 800 px each) -->
+      <div class="gallery-group" id="marsya">
+        <h3>Marsya</h3>
+        <p class="group-desc">A few moments of Marsya.</p>
+
+        <div class="gallery">
+          <div class="gallery-card">
+            <div class="photo"><img src="MarsyaPhoto3.jpg" alt="Marsya Photo 3"></div>
+            <h4>Marsya Photo 1</h4>
+            <p>Yes, this is her best angle.</p>
+          </div>
+
+          <div class="gallery-card">
+            <div class="photo"><img src="MarsyaPhoto4.jpg" alt="Marsya Photo 4"></div>
+            <h4>Marsya Photo 2</h4>
+            <p>Fit was served, no notes.</p>
+          </div>
+
+          <div class="gallery-card">
+            <div class="photo"><img src="MarsyaPhoto5.jpg" alt="Marsya Photo 5"></div>
+            <h4>Marsya Photo 3</h4>
+            <p>Not a phase, just her vibe.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. SOCIAL MEDIA (screenshots: 800 x 800 px each) -->
+      <div class="gallery-group" id="social">
+        <h3>Marsya's Social Media</h3>
+        <p class="group-desc">Find Marsya online.</p>
+
+        <div class="gallery">
+          <div class="gallery-card">
+            <div class="photo"><img src="Instagram.jpg" alt="Instagram Screenshot"></div>
+            <h4>Instagram</h4>
+            <p>@mrsysrhh</p>
+           <a href="https://www.instagram.com/mrsysrhh/" target="_blank">Visit profile</a>
+          </div>
+
+          <div class="gallery-card">
+            <div class="photo"><img src="Tiktok.jpg" alt="TikTok Screenshot"></div>
+            <h4>TikTok</h4>
+            <p>@mrsysrhh</p>
+         <a href= "https://www.tiktok.com/@mrsysrhh?_r=1&_t=ZS-9BHuz3tNXC2" target="_blank">Visit profile</a>
+
+          </div>
+
+          <div class="gallery-card">
+            <div class="photo"><img src="Threads.jpg" alt="Facebook Screenshot"></div>
+            <h4>Threads</h4>
+            <p>@mrsysrhh</p>
+           <a href= "https://www.threads.com/@mrsysrhh" target="_blank">Visit profile</a>
+
+          </div>
+        </div>
+
+        <!-- VIDEO (big, under the social media cards)
+             Save your video in the same folder as index.html -->
+        <div class="video-wide">
+          <div class="video-box">
+            <video id="side-video" controls preload="metadata">
+              <source src="MarsyaVideo.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="video-placeholder">&#9654; Video coming soon</div>
+          </div>
+          <p class="video-caption">Review With Muji</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <h2>Contact</h2>
+      <form id="contact-form">
+        <input type="text" id="name" placeholder="Your name">
+        <input type="email" id="email" placeholder="Your email">
+        <textarea id="message" placeholder="Your message"></textarea>
+        <button type="submit" class="btn">Send message</button>
+      </form>
+      <p id="message-status"></p>
+
+      <div class="contact-info">
+        <p class="contact-title">Contact me</p>
+        <p>Phone: <a href="tel:+6011-6874 6209">011-6874 6209</a></p>
+        <p>Email: <a href="mailto:marsyaamysrhh@gmail.com">marsyaamysrhh@gmail.com</a></p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; <span id="year"></span> . The Website is develop to fullfill the requirement for IMD318 .</p>
+      <p class="local-time">Your local time: <span id="local-time"></span></p>
+      <p class="local-time">Sarawak, Malaysia: <span id="my-time"></span></p>
+    </footer>
+
+  </main>
+
+  <!-- LIGHTBOX (shows the big photo when you click a card) -->
+  <div id="lightbox"><img src="" alt="Enlarged photo"></div>
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+  <script>
+    // 1. Greeting changes depending on the time of day
+    var hour = new Date().getHours();
+    var greeting = document.getElementById("greeting");
+
+    if (hour < 12) {
+      greeting.textContent = "Good morning, and welcome to my website.";
+    } else if (hour < 18) {
+      greeting.textContent = "Good afternoon, and welcome to my website.";
+    } else {
+      greeting.textContent = "A story worth getting to know .";
+    }
+
+    // 2. Automatic year in the footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // 3. Open / close the sidebar on phones
+    var sidebar = document.getElementById("sidebar");
+    var menuBtn = document.getElementById("menu-btn");
+
+    menuBtn.addEventListener("click", function () {
+      sidebar.classList.toggle("open");
+    });
+
+    // close the sidebar after clicking any link (phones)
+    var sideLinks = sidebar.querySelectorAll("a");
+    for (var i = 0; i < sideLinks.length; i++) {
+      sideLinks[i].addEventListener("click", function () {
+        sidebar.classList.remove("open");
+      });
+    }
+
+    // 4. Highlight the current section in the sidebar menu
+    var ids = ["home", "about", "education", "experience", "interests", "gallery", "contact"];
+    var navLinks = document.querySelectorAll("#main-nav a");
+
+    window.addEventListener("scroll", function () {
+      var current = "home";
+
+      for (var i = 0; i < ids.length; i++) {
+        var section = document.getElementById(ids[i]);
+        if (section.offsetTop - 150 <= window.scrollY) {
+          current = ids[i];
+        }
+      }
+
+      for (var j = 0; j < navLinks.length; j++) {
+        navLinks[j].classList.remove("active");
+        if (navLinks[j].getAttribute("href") === "#" + current) {
+          navLinks[j].classList.add("active");
+        }
+      }
+    });
+
+    // 5. If a photo file is missing, show its name instead of a broken icon
+    var photos = document.querySelectorAll(".photo img, .profile-photo img, .hero-photo img");
+
+    function showPlaceholder(img) {
+      var text = document.createTextNode(img.alt);
+      img.parentNode.appendChild(text);
+      img.style.display = "none";
+    }
+
+    for (var k = 0; k < photos.length; k++) {
+      photos[k].addEventListener("error", function () {
+        showPlaceholder(this);
+      });
+      if (photos[k].complete && photos[k].naturalWidth === 0) {
+        showPlaceholder(photos[k]);
+      }
+    }
+
+    // 6. Click a gallery photo to see it bigger
+    var lightbox = document.getElementById("lightbox");
+    var lightboxImg = lightbox.querySelector("img");
+    var galleryPhotos = document.querySelectorAll(".gallery .photo img");
+
+    for (var m = 0; m < galleryPhotos.length; m++) {
+      galleryPhotos[m].addEventListener("click", function () {
+        lightboxImg.src = this.src;
+        lightbox.classList.add("show");
+      });
+    }
+
+    lightbox.addEventListener("click", function () {
+      lightbox.classList.remove("show");
+    });
+
+    // 7. Simple contact form check
+    document.getElementById("contact-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      var name = document.getElementById("name").value.trim();
+      var email = document.getElementById("email").value.trim();
+      var message = document.getElementById("message").value.trim();
+      var status = document.getElementById("message-status");
+
+      if (name === "" || email === "" || message === "") {
+        status.textContent = "Please fill in all the fields.";
+      } else {
+        status.textContent = "Thank you, " + name + "! Your message was sent.";
+        this.reset();
+      }
+    });
+
+    // 8. Fade-up animation when you scroll to something
+    var revealItems = document.querySelectorAll("section h2, .table-wrap, .gallery-group h3, .group-desc, .card, .gallery-card, form, .contact-info");
+
+    for (var r = 0; r < revealItems.length; r++) {
+      var position = Array.prototype.indexOf.call(revealItems[r].parentNode.children, revealItems[r]);
+      revealItems[r].classList.add("reveal");
+      revealItems[r].style.animationDelay = (position % 4) * 0.12 + "s";
+    }
+
+    if ("IntersectionObserver" in window) {
+      var revealObserver = new IntersectionObserver(function (entries) {
+        for (var e = 0; e < entries.length; e++) {
+          if (entries[e].isIntersecting) {
+            entries[e].target.classList.add("visible");
+            revealObserver.unobserve(entries[e].target);
+          }
+        }
+      }, { threshold: 0.15 });
+
+      for (var o = 0; o < revealItems.length; o++) {
+        revealObserver.observe(revealItems[o]);
+      }
+    } else {
+      for (var q = 0; q < revealItems.length; q++) {
+        revealItems[q].classList.add("visible");
+      }
+    }
+
+    // 9. Soft falling petals in the background
+    var petalBox = document.getElementById("petals");
+    for (var p = 0; p < 14; p++) {
+      var petal = document.createElement("span");
+      var size = 8 + Math.random() * 10;
+      petal.className = "petal";
+      petal.style.left = Math.random() * 100 + "%";
+      petal.style.width = size + "px";
+      petal.style.height = size * 1.3 + "px";
+      petal.style.animationDuration = 12 + Math.random() * 12 + "s";
+      petal.style.animationDelay = -Math.random() * 20 + "s";
+      petalBox.appendChild(petal);
+    }
+
+    // 10. Scroll progress line at the top
+    var progress = document.getElementById("progress");
+    window.addEventListener("scroll", function () {
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + "%";
+    });
+
+    // 11. Local time in the footer (updates every second)
+    function updateClock() {
+      var now = new Date();
+      var zone = "";
+      try { zone = " (" + Intl.DateTimeFormat().resolvedOptions().timeZone + ")"; } catch (err) {}
+
+      document.getElementById("local-time").textContent =
+        now.toLocaleDateString([], { weekday: "short", day: "numeric", month: "short", year: "numeric" }) +
+        ", " + now.toLocaleTimeString() + zone;
+
+      document.getElementById("my-time").textContent =
+        now.toLocaleTimeString("en-GB", { timeZone: "Asia/Kuala_Lumpur" });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // 12. Gallery music
+    var gallerySongs = {
+      family: "Sade.mp3",
+      marsya: "Sade.mp3",
+      social: "Sade.mp3"
+    };
+    var groupIds = ["family", "marsya", "social"];
+    var maxVolume = 0.6;
+
+    var audio = new Audio();
+    audio.loop = true;
+    audio.volume = 0;
+
+    var musicOn = true;
+    var videoPlaying = false;
+    var wantedGroup = "";
+    var playingGroup = "";
+    var starting = false;
+    var failed = {};
+    var fadeTimer = null;
+    var musicBtn = document.getElementById("music-btn");
+
+    function fadeAudio(target, done) {
+      clearInterval(fadeTimer);
+      fadeTimer = setInterval(function () {
+        var v = audio.volume;
+        if (Math.abs(v - target) < 0.05) {
+          audio.volume = target;
+          clearInterval(fadeTimer);
+          if (done) { done(); }
+        } else {
+          audio.volume = Math.min(1, Math.max(0, v + (target > v ? 0.05 : -0.05)));
+        }
+      }, 80);
+    }
+
+    function updateMusic() {
+      var want = (musicOn && !videoPlaying) ? wantedGroup : "";
+
+      // not in the gallery (or music is off): fade out and pause
+      if (want === "") {
+        if (playingGroup !== "") {
+          playingGroup = "";
+          fadeAudio(0, function () { audio.pause(); });
+        }
+        return;
+      }
+
+      // already playing the right song, or this song file is missing
+      if (want === playingGroup || starting || failed[want]) { return; }
+
+      // moving to another group that uses the SAME song: keep playing, do not restart
+      if (playingGroup !== "" && gallerySongs[want] === gallerySongs[playingGroup]) {
+        playingGroup = want;
+        return;
+      }
+
+      starting = true;
+      audio.src = gallerySongs[want];
+      audio.volume = 0;
+
+      var promise = audio.play();
+      if (promise !== undefined) {
+        promise.then(function () {
+          starting = false;
+          playingGroup = want;
+          fadeAudio(maxVolume);
+        }).catch(function (err) {
+          starting = false;
+          playingGroup = "";
+          // browsers block sound until the visitor clicks once; that is fine, we try again later
+          if (err && err.name !== "NotAllowedError" && err.name !== "AbortError") {
+            failed[want] = true;
+          }
+        });
+      } else {
+        starting = false;
+      }
+    }
+
+    function checkGallery() {
+      var middle = window.innerHeight / 2;
+      var box = document.getElementById("gallery").getBoundingClientRect();
+
+      // music plays while ANY part of the gallery is on the screen
+      if (box.top > window.innerHeight || box.bottom < 0) {
+        wantedGroup = "";
+      } else {
+        if (wantedGroup === "") { wantedGroup = groupIds[0]; }
+        for (var n = 0; n < groupIds.length; n++) {
+          var area = document.getElementById(groupIds[n]).getBoundingClientRect();
+          if (area.top <= middle && area.bottom >= middle) {
+            wantedGroup = groupIds[n];
+          }
+        }
+      }
+      updateMusic();
+    }
+
+    window.addEventListener("scroll", checkGallery);
+    checkGallery();
+
+    // the first click / tap / key press lets the browser play sound
+    document.addEventListener("click", updateMusic);
+    document.addEventListener("touchstart", updateMusic);
+    document.addEventListener("keydown", updateMusic);
+
+    // 13. Sidebar video: show it only when the file really loads,
+    //     and pause the background music while it plays
+    var sideVideo = document.getElementById("side-video");
+
+    sideVideo.addEventListener("loadeddata", function () {
+      sideVideo.classList.add("ready");
+    });
+    sideVideo.addEventListener("play", function () {
+      videoPlaying = true;
+      updateMusic();
+    });
+    sideVideo.addEventListener("pause", function () {
+      videoPlaying = false;
+      updateMusic();
+    });
+    sideVideo.addEventListener("ended", function () {
+      videoPlaying = false;
+      updateMusic();
+    });
+
+    musicBtn.addEventListener("click", function () {
+      musicOn = !musicOn;
+      musicBtn.innerHTML = musicOn ? "&#9834; Music: on" : "&#9834; Music: off";
+      updateMusic();
+    });
+  </script>
+
+</body>
+</html>
